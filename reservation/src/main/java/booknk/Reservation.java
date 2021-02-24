@@ -20,27 +20,43 @@ public class Reservation {
         BeanUtils.copyProperties(this, reserved);
         reserved.publishAfterCommit();
 
-        //Following code causes dependency to external APIs
-        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
-
-        .external.Delivery delivery = new .external.Delivery();
-        // mappings goes here
-        Application.applicationContext.getBean(.external.DeliveryService.class)
-            .deliver(delivery);
-
+////////////////////////////////////////////////////////        
+//        //Following code causes dependency to external APIs
+//        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
+//
+//        .external.Delivery delivery = new .external.Delivery();
+//        // mappings goes here
+//        Application.applicationContext.getBean(.external.DeliveryService.class)
+//            .deliver(delivery);
+////////////////////////////////////////////////////////
 
     }
 
-    @PostUpdate
-    public void onPostUpdate(){
+////////////////////////////////////////////////////////    
+//    @PostUpdate
+//    public void onPostUpdate(){
+//        Canceled canceled = new Canceled();
+//        BeanUtils.copyProperties(this, canceled);
+//        canceled.publishAfterCommit();
+//
+//    }
+////////////////////////////////////////////////////////
+
+    @PreRemove
+    public void onPreRemove(){
         Canceled canceled = new Canceled();
         BeanUtils.copyProperties(this, canceled);
         canceled.publishAfterCommit();
 
+        //Following code causes dependency to external APIs
+        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
 
+        Delivery delivery = new Delivery();
+        // mappings goes here
+        ReservationApplication.applicationContext.getBean(DeliveryService.class)
+            .cancel(delivery);
     }
-
-
+    
     public Long getId() {
         return id;
     }
