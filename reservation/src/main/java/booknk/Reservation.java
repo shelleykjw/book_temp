@@ -3,6 +3,8 @@ package booknk;
 import javax.persistence.*;
 import org.springframework.beans.BeanUtils;
 import java.util.List;
+import book.external.Delivery;
+import book.external.DeliveryService;
 
 @Entity
 @Table(name="Reservation_table")
